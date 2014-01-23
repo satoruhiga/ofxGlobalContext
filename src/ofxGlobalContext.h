@@ -13,13 +13,9 @@ OFX_GLOBAL_CONTEXT_BEGIN_NAMESPACE
 
 #pragma mark - Context
 
-class Context
+struct Context
 {
-public:
-	
 	typedef ofPtr<Context> Ref;
-
-	virtual void setup() {}
 	virtual void update() {}
 };
 
@@ -223,7 +219,6 @@ private:
 		Context::Ref o = Context::Ref(p);
 		unsigned int class_id = Type2Int<T>::value();
 		contexts[class_id] = o;
-		o->setup();
 		return p;
 	}
 
