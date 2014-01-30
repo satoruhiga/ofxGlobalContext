@@ -8,7 +8,7 @@ class MyContext : public ofxGlobalContext::Context
 {
 public:
 	
-	void setup()
+	MyContext()
 	{
 		cout << "setup MyContext" << endl;
 	}
@@ -29,9 +29,9 @@ public:
 	
 	ofVideoGrabber video;
 	
-	void setup()
+	MyVideoContext(int w, int h)
 	{
-		video.initGrabber(640, 480);
+		video.initGrabber(w, h);
 	}
 	
 	void update()
@@ -43,16 +43,19 @@ public:
 
 // effect context
 
+template <typename T>
 class MyInvertVideoContext : public ofxGlobalContext::Context
 {
 public:
+	
+	typedef T Video;
 	
 	ofImage image;
 	int counter;
 	
 	void setup()
 	{
-		MyVideoContext* o = $Context(MyVideoContext);
+		Video* o = $Context(Video);
 		image.allocate(o->video.getWidth(), o->video.getHeight(), OF_IMAGE_COLOR);
 		
 		counter = 0;
@@ -60,8 +63,8 @@ public:
 	
 	void update()
 	{
-		// get global instance of MyVideoContext
-		ofPixels &video_pix = $Context(MyVideoContext)->video.getPixelsRef();
+		// get global instance of Video
+		ofPixels &video_pix = $Context(Video)->video.getPixelsRef();
 		
 		for (int y = 0; y < image.getHeight(); y++)
 		{
@@ -102,8 +105,8 @@ public:
 		
 		// register contexts
 		ofxGlobalContext::Manager::defaultManager().createContext<MyContext>();
-		ofxGlobalContext::Manager::defaultManager().createContext<MyVideoContext>();
-		ofxGlobalContext::Manager::defaultManager().createContext<MyInvertVideoContext>();
+		ofxGlobalContext::Manager::defaultManager().createContext<MyVideoContext>(640, 480); // with constructor arguments
+		ofxGlobalContext::Manager::defaultManager().createContext<MyInvertVideoContext<MyVideoContext> >(); // with template
 	}
 	
 	void update()
@@ -115,7 +118,7 @@ public:
 	void draw()
 	{
 		$Context(MyVideoContext)->video.draw(0, 0);
-		$Context(MyInvertVideoContext)->image.draw(640, 0);
+		$Context(MyInvertVideoContext<MyVideoContext>)->image.draw(640, 0);
 	}
 
 	void keyPressed(int key)
