@@ -170,7 +170,7 @@ public:
 	template <typename T>
 	T* getContext()
 	{
-		unsigned int class_id = Type2Int<T>::value();
+		TYPE_ID class_id = RTTI<T>::value();
 		if (contexts.find(class_id) == contexts.end())
 		{
 			ofLogError("Manager") << "invalid context classname";
@@ -184,7 +184,7 @@ public:
 	
 	void update()
 	{
-		map<unsigned int, Context::Ref>::iterator it = contexts.begin();
+		map<TYPE_ID, Context::Ref>::iterator it = contexts.begin();
 		while (it != contexts.end())
 		{
 			it->second->update();
@@ -194,17 +194,19 @@ public:
 	
 protected:
 	
+	typedef void* TYPE_ID;
+	
 	template<typename T>
-	struct Type2Int
+	struct RTTI
 	{
-		static unsigned int value()
+		static TYPE_ID value()
 		{
 			static size_t m = 0;
-			return (unsigned int)&m;
+			return (TYPE_ID)&m;
 		}
 	};
 
-	map<unsigned int, Context::Ref> contexts;
+	map<TYPE_ID, Context::Ref> contexts;
 	
 private:
 	
@@ -217,7 +219,7 @@ private:
 	T* newContext(T* p)
 	{
 		Context::Ref o = Context::Ref(p);
-		unsigned int class_id = Type2Int<T>::value();
+		TYPE_ID class_id = RTTI<T>::value();
 		contexts[class_id] = o;
 		return p;
 	}
