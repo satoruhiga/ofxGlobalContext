@@ -182,6 +182,7 @@ public:
 	
 public:
 	
+	void clear() { contexts.clear(); }
 	void update()
 	{
 		map<TYPE_ID, Context::Ref>::iterator it = contexts.begin();
