@@ -53,7 +53,7 @@ public:
 	ofImage image;
 	int counter;
 	
-	void MyInvertVideoContext()
+      MyInvertVideoContext()
 	{
 		Video* o = $Context(Video);
 		image.allocate(o->video.getWidth(), o->video.getHeight(), OF_IMAGE_COLOR);

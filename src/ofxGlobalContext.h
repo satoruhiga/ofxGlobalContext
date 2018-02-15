@@ -182,6 +182,7 @@ public:
 	
 public:
 	
+	void clear() { contexts.clear(); }
 	void update()
 	{
 		map<TYPE_ID, Context::Ref>::iterator it = contexts.begin();
@@ -213,7 +214,7 @@ private:
 	Manager() {}
 	~Manager() {}
 	Manager(const Manager&) {}
-	Manager& operator=(const Manager&) {}
+      Manager& operator=(const Manager&) { return *this; }
 
 	template <typename T>
 	T* newContext(T* p)
